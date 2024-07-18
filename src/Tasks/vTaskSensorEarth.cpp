@@ -1,9 +1,8 @@
 #include "vTaskSensorEarth.h"
 
-int sensorEarthValue = 0;
-
 //_____Variables_____
-
+int sensorEarthValue = 0;
+int humidityPercent = 0;
 uint8_t flagSensorEarth = 0x01; 
 /* 
 (0x00) - Desactivacion  
@@ -13,14 +12,25 @@ uint8_t flagSensorEarth = 0x01;
 
 void initSensorEarth(){
 
-  pinMode(sensorPinEarth, INPUT_PULLDOWN);// Iniciar Sensor de humedad de la tierra.
+  pinMode(PIN_SENSOR_SUSTRATO, INPUT_PULLDOWN);// Iniciar Sensor de humedad de la tierra.
 }
-
-
 
 void vTaskSensorEarth(){
 
-  sensorEarthValue = analogRead(sensorPinEarth); // Leer el valor analógico
+  readSensor();
 
-  delay(200); // Esperar 1 segundo
+  if(humidityPercent == 0){
+    delay(5000);
+    readSensor();
+    
+    if(humidityPercent == 0){
+      flagLicuidCristalI2C = 0x00;
+      flagBombaAgua = 0x01;
+    }
+  }
+}
+
+void readSensor(){
+  sensorEarthValue = analogRead(PIN_SENSOR_SUSTRATO); // Leer el valor analógico
+  humidityPercent = map(sensorEarthValue, 4095, 0, 0, 100);
 }
