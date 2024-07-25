@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "vTasKSensorEarth.h"
 #include "vTaskLicuidCristalI2C.h"
+#include "vTaskBombaAgua.h"
 
 void setup() {
 
@@ -8,11 +9,13 @@ void setup() {
 
   initSensorEarth();
   initLicuidCristalI2C();
+  initBombaAgua();
 }
 
 void loop() {
 
   vTaskSensorEarth();
-  vTaskLicuidCristalI2C(); 
+  vTaskLicuidCristalI2C();
+  vTaskBombaAgua(); 
 }
 

@@ -1,6 +1,3 @@
-#ifndef VTASK_LICUID_CRISTAL_I2C_H
-#define VTASK_LICUID_CRISTAL_I2C_H
-
 #include <Arduino.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
@@ -12,5 +9,3 @@
 // Declaración de las funciones
 void initLicuidCristalI2C();
 void vTaskLicuidCristalI2C();
-
-#endif // VTASK_LICUID_CRISTAL_I2C_H
