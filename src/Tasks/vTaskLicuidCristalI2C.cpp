@@ -5,12 +5,12 @@ LiquidCrystal_I2C lcd(0x27, 2, 6);
 
 //_____Variables_____
 
-int humidityPercent = 0;
 String mensaje = "No message";
 uint8_t flagLicuidCristalI2C = 0x01; 
 /* 
 (0x00) - Desactivacion  
 (0x01) - Encendido
+(0x02) - Reinicio
 
 */
 
@@ -26,14 +26,36 @@ void initLicuidCristalI2C(){
 }
 
 void vTaskLicuidCristalI2C(){
+  lcd.clear();
 
-lcd.clear();
-lcd.setCursor(0, 0);
-humidityPercent = map(sensorEarthValue, 4095, 0, 0, 100);
-mensaje = "Humedad=> " + String(humidityPercent) + "%";
-lcd.print(mensaje);
-Serial.println("envio");
-lcd.setCursor(0, 1);
-lcd.print(" (^ _ ^) ");
-delay(200);
+  switch (flagLicuidCristalI2C)
+  {
+    case 0x00:
+      lcd.clear();
+      return;
+
+    case 0x01:
+      lcd.setCursor(0, 0);
+      mensaje = "Humedad=> " + String(humidityPercent) + "%";
+      lcd.print(mensaje);
+      lcd.setCursor(0, 1);
+
+      if(humidityPercent > 80){
+        lcd.print(" (* O *) ");
+
+      } else if(humidityPercent > 25){
+        lcd.print(" (^ _ ^) ");
+
+      } else {
+        lcd.print(" (* x *) ");
+      }
+      delay(1000);
+      break;
+  
+  case 0x02:
+    lcd.init();//solucion al bug de forma ineficiente.
+    flagLicuidCristalI2C = 0x01;
+    break;
+  }
 }
+
