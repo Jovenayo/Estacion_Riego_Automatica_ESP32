@@ -13,7 +13,7 @@ El objetivo principal del proyecto es mantener el nivel de humedad adecuado en e
 
 ## Esquemático del Proyecto
 
-![Esquemático del Proyecto](ruta/al/esquematico.png)
+![Esquemático del Proyecto](Estacion_Riego_Autonoma.pdf)
 
 ## Componentes
 
