@@ -5,13 +5,18 @@
 //#include "SensorSustrato.h"
 #include "LCD_I2C.h"
 #include "BombaAgua.h"
+#include "ServidorWeb.h"
+
+#define COM_MODE_01 1
 
 SensorSustrato sensorSustrato;
 BombaAgua bombaAgua(TIEMPO_ACTIVA, TIEMPO_ESPERA, HUMEDAD_HUMBRAL, &sensorSustrato);
 LCD_I2C lcd_i2c;
+//ServidorWeb server_Web(SSID, PASSWORD);
 
 void setup(void){
-
+  while(1);
+  Serial.println("INICIO...OK.");
   // Inicialización del UART para la comunicación serial
     uart_config_t uart_config = {
         .baud_rate = 115200,
@@ -26,9 +31,24 @@ void setup(void){
     ESP_LOGI("main.cpp", "System initialized");
   /*******************************************************/
 
+  //Interfaz de red
+  switch (COM_MODE_01)
+  {
+  case 1:
+    //xTaskCreate(ServidorWeb::vTaskServidorWeb, "vtaskServidorWeb", 4048, &server_Web, 1, NULL);    
+    break;
+  
+  default:
+    Serial.println("[ERROR] No se ha establecido Interfaz de comunicaciones.");
+    break;
+  }
+
+  /******************************************************/
+
   xTaskCreate(SensorSustrato::vTaskSensorSustratoWrapper, "vtaskSensorSustrato", 2048, &sensorSustrato, 1, NULL);
   xTaskCreate(LCD_I2C::vTaskLCD_I2CWrapper, "vtaskLCD_I2C", 2048, &lcd_i2c, 1, NULL);
   xTaskCreate(BombaAgua::vTaskBombaAguaWrapper, "vtaskBomabAgua", 2048, &bombaAgua, 1, NULL);
+
 
 }
 

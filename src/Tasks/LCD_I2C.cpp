@@ -42,16 +42,16 @@ void LCD_I2C::vTaskLCD_I2C(){
   {
     case 0x00:
       lcd.clear();
-      return;
+      break;;
 
     case 0x01:
       mostrarInformacion();
       break;
 
-  case 0x02:
-    lcd.init();//solucion al bug de forma ineficiente.
-    flagLicuidCristal_I2C = 0x01;
-    break;
+    case 0x02:
+      lcd.init();//solucion al bug de forma ineficiente.
+      flagLicuidCristal_I2C = 0x01;
+      break;
   }
 }
 

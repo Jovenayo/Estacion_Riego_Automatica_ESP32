@@ -1,25 +1,37 @@
-// #include <WiFi.h>
-// #include <WebServer.h>
-// #include <SPIFFS.h>
-// #include "freertos/FreeRTOS.h"
-// #include "freertos/task.h"
-// #include "variablesCompartidas.h"
+#include <WiFi.h>
+#include <WebServer.h>
+#include <SPIFFS.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "variablesCompartidas.h"
 
-// #define SSID "Estacion de riego"
-// #define PASSWORD "admin"
+#define SSID "Estacion de riego"
+#define PASSWORD "admin"
+#define PATH_HTML_ROOT "/estacionDeRiego.htm"
 
-// class vTaskServerWeb {
-// public:
-//     ServerTask();
+#define PORT "80"
 
-// private:
+class ServidorWeb {
+public:
+    // Constructor de la clase
+    ServidorWeb(const char* ssid, const char* password);
 
-//     const char* ssid;
-//     const char* password;
+    // Método para iniciar el servidor web y el AP
+    static void vTaskServidorWeb(void *pvParameters);
+    void start();
 
-//     WebServer server;
+    // Método para manejar las peticiones HTTP
+    void handleClientRequests();
 
-//     void setServer();
-// };
+private:
+    const char* ssid;
+    const char* password;
 
-// void S
+    WebServer server; // Servidor web
+
+    // Método para manejar la ruta raíz
+    void putHtmlRoot();
+
+    void setHtml(const char* path);
+
+};
