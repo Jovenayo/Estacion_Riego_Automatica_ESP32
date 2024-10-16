@@ -1,4 +1,5 @@
 #include "SensorSustrato.h"
+#include <esp_task_wdt.h>
 
 //_____Variables_____
 uint8_t humedadSustrato = 0;
@@ -14,31 +15,59 @@ SensorSustrato::SensorSustrato(){
 }
 
 void SensorSustrato::initSensorSustrato(){
-
   pinMode(PIN_SENSOR_SUSTRATO, INPUT_PULLDOWN);// Iniciar Sensor de humedad de la tierra.
 }
 
-void SensorSustrato::vTaskSensorSustratoWrapper(void *pvParameters){
+void SensorSustrato::vTaskSensorSustrato(void *pvParameters){
+  #ifdef DEBUG_MODE
+  Serial.println("[Tarea_SensroSustrato] {Debug_Mode}---> Funcion ejecutandose: vTaskSensorSustrato()");
+  #endif
   SensorSustrato *instance = static_cast<SensorSustrato*>(pvParameters);
-  instance->vTaskSensorSustrato();
+  instance->start();
+  
+  #ifdef DEBUG_MODE
+  Serial.println("[Tarea_SensroSustrato] [OK] vTaskSensorSustrato()");
+  #endif
 }
 
-void SensorSustrato::vTaskSensorSustrato(){
-
-  readSensor();
-
-  if(humedadPorcentaje == 0){
-    delay(5000);
+void SensorSustrato::start(){
+  while(1){
     readSensor();
-    
+
     if(humedadPorcentaje == 0){
-      flagLicuidCristal_I2C = 0x00;
-      flagBombaAgua = 0x01;
+      #ifdef DEBUG_MODE
+      Serial.println("|||Flag 1|||");
+      #endif
+      delay(5000);
+      #ifdef DEBUG_MODE
+      Serial.println("|||Flag 2|||");
+      #endif
+      readSensor();
+      #ifdef DEBUG_MODE
+      Serial.println("|||Flag 3|||");
+      #endif
+
+      
+      if(humedadPorcentaje == 0){
+        flagLicuidCristal_I2C = 0x00;
+        flagBombaAgua = 0x01;
+      }
     }
+
+    esp_task_wdt_reset();
+    vTaskDelay(pdMS_TO_TICKS(1000));
+    
+    #ifdef DEBUG_MODE
+    Serial.println("[Tarea_SensorSustrato] {Debug_Mode}---> SensroSustrato.start(): Se ha ejecutado un ciclo.");
+    #endif 
   }
 }
 
 void SensorSustrato::readSensor(){
   humedadSustrato = analogRead(PIN_SENSOR_SUSTRATO); // Leer el valor analógico
-  humedadPorcentaje = map(humedadPorcentaje, 4095, 0, 0, 100);
+  humedadPorcentaje = map(humedadSustrato, 4095, 0, 0, 100);
+  
+  #ifdef DEBUG_MODE
+  Serial.println("[Tarea_SensorSustrato] {Debug_Mode}---> [OK] readSensor()\r");
+  #endif
 }

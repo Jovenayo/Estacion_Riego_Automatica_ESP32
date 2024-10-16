@@ -22,12 +22,18 @@ LCD_I2C::LCD_I2C(){
 void LCD_I2C::initLCD_I2C(){
 
   Wire.begin(I2C_SDA, I2C_SCL);
-  
-  Serial.println("Wire: [OK]\r\n");
 
+  #ifdef DEBUG_MODE
+  Serial.println(" |---> {Wire}: begin()\r");
+  #endif
+  
   lcd.init();
   lcd.backlight();
   lcd.clear();
+  
+  #ifdef DEBUG_MODE
+  Serial.println(" |---> {ldc}: init()\r");
+  #endif
 }
 
 void LCD_I2C::vTaskLCD_I2CWrapper(void *pvParameters){

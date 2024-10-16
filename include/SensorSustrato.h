@@ -7,11 +7,11 @@ private:
     uint8_t humedadSustrato; //Valor del sensor de humedad del sustrato.
 
     static void initSensorSustrato();
-    void vTaskSensorSustrato();
+    void start();
 
 public:
     SensorSustrato();
     
-    static void vTaskSensorSustratoWrapper(void *pvParameters);
+    static void vTaskSensorSustrato(void *pvParameters);
     void readSensor();
 };
