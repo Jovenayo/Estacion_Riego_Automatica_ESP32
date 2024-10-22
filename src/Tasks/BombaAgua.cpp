@@ -17,6 +17,9 @@ BombaAgua::BombaAgua(uint8_t tiempoActiva, uint8_t tiempoEspera, uint8_t humedad
 void BombaAgua::initBombaAgua(){
     
     pinMode(PIN_BOMABA_AGUA, OUTPUT);
+    #ifdef DEBUG_MODE
+        Serial.println("[OK] Bomba De Agua\r");
+    #endif
 }
 
 void BombaAgua::vTaskBombaAguaWrapper(void *pvParameters){

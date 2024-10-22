@@ -22,9 +22,9 @@ LCD_I2C::LCD_I2C(){
 void LCD_I2C::initLCD_I2C(){
 
   Wire.begin(I2C_SDA, I2C_SCL);
-
   #ifdef DEBUG_MODE
-  Serial.println(" |---> {Wire}: begin()\r");
+    Serial.println("[ ] Inicilizando LCDisplay  \r");
+    Serial.println(" |---> {Wire}: begin()\r");
   #endif
   
   lcd.init();
@@ -33,6 +33,7 @@ void LCD_I2C::initLCD_I2C(){
   
   #ifdef DEBUG_MODE
   Serial.println(" |---> {ldc}: init()\r");
+  Serial.println("[OK]\r");
   #endif
 }
 
@@ -42,22 +43,25 @@ void LCD_I2C::vTaskLCD_I2CWrapper(void *pvParameters){
 }
 
 void LCD_I2C::vTaskLCD_I2C(){
-  lcd.clear();
+  while(1){
+    esp_task_wdt_reset();
+    lcd.clear();
 
-  switch (flagLicuidCristal_I2C)
-  {
-    case 0x00:
-      lcd.clear();
-      return;
+    switch (flagLicuidCristal_I2C)
+    {
+      case 0x00:
+        lcd.clear();
+        return;
 
-    case 0x01:
-      mostrarInformacion();
+      case 0x01:
+        mostrarInformacion();
+        break;
+
+    case 0x02:
+      lcd.init();//solucion al bug de forma ineficiente.
+      flagLicuidCristal_I2C = 0x01;
       break;
-
-  case 0x02:
-    lcd.init();//solucion al bug de forma ineficiente.
-    flagLicuidCristal_I2C = 0x01;
-    break;
+    }
   }
 }
 

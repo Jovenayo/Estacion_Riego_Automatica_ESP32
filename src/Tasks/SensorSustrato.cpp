@@ -1,5 +1,4 @@
 #include "SensorSustrato.h"
-#include <esp_task_wdt.h>
 
 //_____Variables_____
 uint8_t humedadSustrato = 0;
@@ -19,19 +18,23 @@ void SensorSustrato::initSensorSustrato(){
 }
 
 void SensorSustrato::vTaskSensorSustrato(void *pvParameters){
-  #ifdef DEBUG_MODE
-  Serial.println("[Tarea_SensroSustrato] {Debug_Mode}---> Funcion ejecutandose: vTaskSensorSustrato()");
-  #endif
-  SensorSustrato *instance = static_cast<SensorSustrato*>(pvParameters);
-  instance->start();
-  
-  #ifdef DEBUG_MODE
-  Serial.println("[Tarea_SensroSustrato] [OK] vTaskSensorSustrato()");
-  #endif
+    #ifdef DEBUG_MODE
+    Serial.println("[Tarea_SensroSustrato] {Debug_Mode}---> Funcion ejecutandose: vTaskSensorSustrato()");
+    #endif
+    SensorSustrato *instance = static_cast<SensorSustrato*>(pvParameters);
+    instance->start();
+    
+    #ifdef DEBUG_MODE
+    Serial.println("[Tarea_SensroSustrato] [OK] vTaskSensorSustrato()");
+    #endif
 }
 
 void SensorSustrato::start(){
+  #ifdef DEBUG_MODE
+    Serial.println("[OK] Sensor Sustrato\r");
+  #endif
   while(1){
+    esp_task_wdt_reset();
     readSensor();
 
     if(humedadPorcentaje == 0){

@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include <esp_task_wdt.h>
 
 
 //Debug flag, para que aparezcan check points de estado de las tareas.
